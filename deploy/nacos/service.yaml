@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nacos
+  labels:
+    app: nacos
+spec:
+  ports:
+    - name: server
+      port: 8848
+      targetPort: 8848
+      nodePort: 32111
+  selector:
+    app: nacos
+  type: NodePort
