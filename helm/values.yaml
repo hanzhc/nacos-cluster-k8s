@@ -1,0 +1,52 @@
+internal_mysql:
+  enable: false
+  image: nacos/nacos-mysql:5.7
+  nfs:
+    server: 10.9.28.210
+    path: /nfs1T/nacos/mysql
+  service:
+    name: mysql
+
+custom_mysql:
+  MYSQL_SERVICE_DB_NAME: "nacos_devtest"
+  MYSQL_SERVICE_PORT: "3306"
+  MYSQL_SERVICE_USER: "nacos"
+  MYSQL_SERVICE_PASSWORD: "nacos"
+
+nacos:
+  replicas: "3"
+  image:
+    initContainerImage: nacos/nacos-peer-finder-plugin:1.0
+    nacosImage: nacos/nacos-server:1.4.1
+
+  configuration:
+    JVM_XMX: "2g"
+    JVM_XMS: "2g"
+    JVM_XMN: "1g"
+    MYSQL_SERVICE_HOST: "mysql.nacos"       # 注意mysql部署的命名空间及访问地址
+
+  volumeClaimTemplates:
+    storageClassName: nfs-storage
+    pluginStorage: 5Gi
+    dataStorage: 5Gi
+    logStorage: 5Gi
+
+  resources:
+    limits:
+      cpu: "2"
+      memory: "2Gi"
+    requests:
+      cpu: 100m
+      memory: "1Gi"
+
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution: false
+
+  service:
+    enable: true
+    type: NodePort
+    nodePort: 30660
+
+  ingress:
+    enable: false
+    host: nacos.domain.test

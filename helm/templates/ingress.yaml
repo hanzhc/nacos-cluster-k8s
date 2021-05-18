@@ -1,0 +1,15 @@
+{{- if .Values.nacos.ingress.enable}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nacos-ingress
+spec:
+  rules:
+    - host: {{.Values.nacos.ingress.host}}
+      http:
+        paths:
+          - backend:
+              serviceName: nacos-headless
+              servicePort: 8848
+            path: /nacos
+{{- end}}
