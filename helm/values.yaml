@@ -4,14 +4,16 @@ internal_mysql:
   nfs:
     server: 10.9.28.210
     path: /nfs1T/nacos/mysql
-  service:
-    name: mysql
 
+
+# 若internal_mysql.enable=true 则代表使用内部mysql。custom_mysql可不填写。
 custom_mysql:
   MYSQL_SERVICE_DB_NAME: "nacos_devtest"
   MYSQL_SERVICE_PORT: "3306"
   MYSQL_SERVICE_USER: "nacos"
   MYSQL_SERVICE_PASSWORD: "nacos"
+  MYSQL_SERVICE_HOST: "10.9.28.48"       # 注意mysql部署的命名空间及访问地址
+
 
 nacos:
   replicas: "3"
@@ -23,7 +25,6 @@ nacos:
     JVM_XMX: "2g"
     JVM_XMS: "2g"
     JVM_XMN: "1g"
-    MYSQL_SERVICE_HOST: "mysql.nacos"       # 注意mysql部署的命名空间及访问地址
 
   volumeClaimTemplates:
     storageClassName: nfs-storage
