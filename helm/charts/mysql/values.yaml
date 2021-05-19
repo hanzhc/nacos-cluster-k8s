@@ -3,5 +3,3 @@ image: nacos/nacos-mysql:5.7
 nfs:
   server: 10.9.28.210
   path: /nfs1T/nacos/mysql
-service:
-  name: mysql
