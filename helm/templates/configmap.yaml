@@ -12,16 +12,17 @@ data:
   JVM_XMX: {{ .Values.nacos.configuration.JVM_XMX }}
   JVM_XMS: {{ .Values.nacos.configuration.JVM_XMS }}
   JVM_XMN: {{ .Values.nacos.configuration.JVM_XMN }}
-  {{- if eq .Values.mysql.enable false}}  # 使用自定义的外部mysql
+  {{- if eq .Values.internal_mysql.enable false}}  # 使用自定义的外部mysql
   MYSQL_SERVICE_DB_NAME: {{ .Values.custom_mysql.MYSQL_SERVICE_DB_NAME }}  # 注意需要确认
   MYSQL_SERVICE_PORT: {{ .Values.custom_mysql.MYSQL_SERVICE_PORT }}
   MYSQL_SERVICE_USER: {{ .Values.custom_mysql.MYSQL_SERVICE_USER }}
   MYSQL_SERVICE_PASSWORD: {{ .Values.custom_mysql.MYSQL_SERVICE_PASSWORD }}
+  MYSQL_SERVICE_HOST: {{.Values.custom_mysql.MYSQL_SERVICE_HOST}}
   {{- else}}
   MYSQL_SERVICE_DB_NAME: "nacos_devtest"  # 注意需要确认
   MYSQL_SERVICE_PORT: "3306"
   MYSQL_SERVICE_USER: "nacos"
   MYSQL_SERVICE_PASSWORD: "nacos"
+  MYSQL_SERVICE_HOST: {{.Values.internal_mysql.service.name}}.{{.Release.Namespace}}
   {{- end}}
-  MYSQL_SERVICE_HOST: {{ .Values.nacos.configuration.MYSQL_SERVICE_HOST}}       # 注意mysql部署的命名空间及访问地址
 
