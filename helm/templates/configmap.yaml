@@ -23,6 +23,6 @@ data:
   MYSQL_SERVICE_PORT: "3306"
   MYSQL_SERVICE_USER: "nacos"
   MYSQL_SERVICE_PASSWORD: "nacos"
-  MYSQL_SERVICE_HOST: {{.Values.internal_mysql.service.name}}.{{.Release.Namespace}}
+  MYSQL_SERVICE_HOST: mysql.{{.Release.Namespace}}
   {{- end}}
 
