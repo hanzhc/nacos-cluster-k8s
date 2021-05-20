@@ -46,11 +46,11 @@ spec:
           image: {{.Values.nacos.image.nacosImage}}
           resources:
             limits:
-              cpu: {{ .Values.nacos.resources.limits.cpu }}
-              memory: {{ .Values.nacos.resources.limits.memory }}
+              cpu: {{ .Values.nacos.resources.limits.cpu | quote}}
+              memory: {{ .Values.nacos.resources.limits.memory |quote}}
             requests:
-              cpu: {{ .Values.nacos.resources.requests.cpu }}
-              memory: {{.Values.nacos.resources.requests.memory}}
+              cpu: {{ .Values.nacos.resources.requests.cpu |quote}}
+              memory: {{.Values.nacos.resources.requests.memory |quote}}
           ports:
             - name: client-port
               containerPort: 8848
@@ -76,27 +76,27 @@ spec:
     - metadata:
         name: plugindir
       spec:
-        storageClassName: {{ .Values.nacos.volumeClaimTemplates.storageClassName }} #指定storageclass名称，这里需要根据你的K8S集群进行修改
+        storageClassName: {{ .Values.nacos.persistence.storageClass.name }} #指定storageclass名称，这里需要根据你的K8S集群进行修改
         accessModes: ["ReadWriteMany"]
         resources:
           requests:
-            storage: {{ .Values.nacos.volumeClaimTemplates.pluginStorage | default "5Gi" }}
+            storage: {{ .Values.nacos.persistence.storage.plugindir | default "5Gi" }}
     - metadata:
         name: datadir
       spec:
-        storageClassName: {{ .Values.nacos.volumeClaimTemplates.storageClassName }}
+        storageClassName: {{ .Values.nacos.persistence.storageClass.name}}
         accessModes: ["ReadWriteMany"]
         resources:
           requests:
-            storage: {{ .Values.nacos.volumeClaimTemplates.dataStorage | default "5Gi"}}
+            storage: {{ .Values.nacos.persistence.storage.datadir| default "5Gi"}}
     - metadata:
         name: logdir
       spec:
-        storageClassName: {{ .Values.nacos.volumeClaimTemplates.storageClassName }}
+        storageClassName: {{ .Values.nacos.persistence.storageClass.name }}
         accessModes: ["ReadWriteMany"]
         resources:
           requests:
-            storage: {{ .Values.nacos.volumeClaimTemplates.logStorage | default "5Gi"}}
+            storage: {{ .Values.nacos.persistence.storage.logdir | default "5Gi"}}
   selector:
     matchLabels:
       app: nacos

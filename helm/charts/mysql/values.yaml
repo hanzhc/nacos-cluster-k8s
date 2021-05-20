@@ -3,3 +3,7 @@ image: nacos/nacos-mysql:5.7
 nfs:
   server: 10.9.28.210
   path: /nfs1T/nacos/mysql
+# 暴露mysql服务为nodePort
+exposeService:
+  enable: false
+  nodePort: 32212

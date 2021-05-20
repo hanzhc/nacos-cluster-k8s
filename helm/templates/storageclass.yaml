@@ -1,0 +1,8 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ .Values.nacos.persistence.storageClass.name }}
+parameters:
+  archiveOnDelete: {{ .Values.nacos.persistence.storageClass.archiveOnDelete | quote }}
+provisioner: {{.Values.nacos.persistence.storageClass.provisionerName }}
+reclaimPolicy: {{.Values.nacos.persistence.storageClass.reclaimPolicy }}

@@ -5,8 +5,16 @@ metadata:
   labels:
     name: mysql
 spec:
+  {{- if eq .Values.exposeService.enable true}}
+  type: NodePort
+  {{- else }}
+  type: ClusterIP
+  {{- end }}
   ports:
     - port: 3306
       targetPort: 3306
+      {{- if eq .Values.exposeService.enable true}}
+      nodePort: {{.Values.exposeService.nodePort}}
+      {{- end }}
   selector:
     name: mysql
