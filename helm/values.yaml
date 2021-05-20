@@ -1,10 +1,19 @@
+# 是否需要在集群中部署mysql
+# 若部署，则nacos存储的数据接在此MySQL中。
 internal_mysql:
-  enable: false
+  enable: true
   image: nacos/nacos-mysql:5.7
   nfs:
     server: 10.9.28.210
     path: /nfs1T/nacos/mysql
+  # 暴露mysql服务为nodePort
+  exposeService:
+    enable: false
+    nodePort: 32212
 
+
+# 自定义外部MySQL配置信息
+# 若使用自定义外部mysql存储nacos的配置信息，请配置internal_mysql.enable=false
 # 若internal_mysql.enable=true 则代表使用内部mysql。custom_mysql可不填写。
 custom_mysql:
   MYSQL_SERVICE_DB_NAME: "nacos_devtest"
@@ -18,17 +27,24 @@ nacos:
   image:
     initContainerImage: nacos/nacos-peer-finder-plugin:1.0
     nacosImage: nacos/nacos-server:1.4.1
-
+  # nacos 配置项
   configuration:
     JVM_XMX: "2g"
     JVM_XMS: "2g"
     JVM_XMN: "1g"
 
-  volumeClaimTemplates:
-    storageClassName: nfs-storage
-    pluginStorage: 5Gi
-    dataStorage: 5Gi
-    logStorage: 5Gi
+  persistence:
+    storage:
+      plugindir: 5Gi
+      datadir: 5Gi
+      logdir: 5Gi
+
+    storageClass:
+      name: nacos-storageclass
+      # 配置集群提前创建好的nfs provisioner
+      provisionerName: tsd-nfs-storage
+      archiveOnDelete: false
+      reclaimPolicy: Retain
 
   resources:
     limits:
@@ -38,14 +54,20 @@ nacos:
       cpu: "100m"
       memory: "1Gi"
 
+  #配置nacos Pod反亲和性，放置Pod都起在同一节点上（如果都在一个节点，节点宕机将会使全部实例不可用）
   podAntiAffinity:
+    # false: 尽可能pod不运行在同一个节点上
+    # ture: pod一定运行在不同一个节点上
     requiredDuringSchedulingIgnoredDuringExecution: false
 
+  # 暴露nacos访问方式为IP+端口
   service:
     enable: true
     type: NodePort
     nodePort: 30660
 
+  # 暴露nacos访问方式为域名形式
+  # 只支持http形式
   ingress:
     enable: false
     host: nacos.domain.test
